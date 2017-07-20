@@ -1,13 +1,31 @@
 package edu.pdx.cs410J.chsherpa;
 
 import edu.pdx.cs410J.AbstractFlight;
+
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import static edu.pdx.cs410J.chsherpa.Project1.*;
+
 public class Flight extends AbstractFlight {
+
+  /**
+   * Default Constructor
+   */
+  public Flight(){}
+
+  /**
+   * Constructor with parameter List for easy input of List object
+   *
+   * @param flightInfo
+   */
+  public Flight( List<String> flightInfo ){
+    addFlightInfo(flightInfo);
+  }
 
   /**
    * Returns the name of the Flight
@@ -26,6 +44,9 @@ public class Flight extends AbstractFlight {
   }
 
   @Override
+  /**
+   * Override of parent function getNumber
+   */
   public int getNumber() {
     return flightNumber;
   }
@@ -39,6 +60,9 @@ public class Flight extends AbstractFlight {
   }
 
   @Override
+  /**
+   * Override of the AbstractClass Method getSource
+   */
   public String getSource() {
     return src;
 //    throw new UnsupportedOperationException("This method is not implemented yet");
@@ -67,6 +91,9 @@ public class Flight extends AbstractFlight {
   }
 
   @Override
+  /**
+   * Override of the AbstractClass Method getDestination
+   */
   public String getDestination() {
     return dest;
     // throw new UnsupportedOperationException("This method is not implemented yet");
@@ -81,6 +108,9 @@ public class Flight extends AbstractFlight {
   }
 
   @Override
+  /**
+   * Override of the AbstractClass Method getArrivalString
+   */
   public String getArrivalString() {
     return arriveTime;
     // throw new UnsupportedOperationException("This method is not implemented yet");
@@ -99,6 +129,7 @@ public class Flight extends AbstractFlight {
    * @param flightInfo List Object of flights
    */
   public void addFlightInfo(List<String> flightInfo) {
+      FlightInfoCheck(flightInfo);
       if( flightInfo.size() == 6){
         this.setFlightName(flightInfo.get(0));
         this.setNumber(Integer.parseInt(flightInfo.get(1)));
@@ -113,31 +144,33 @@ public class Flight extends AbstractFlight {
   }
 
   /**
-   * Method to set property by property of a single flight
-   * @param one Flight object passed in
-   */
-  public void addFlightInfo(Flight one) {
-    this.setFlightName(one.getFlightName());
-    this.setNumber(one.getNumber());
-    this.setSource(one.getSource());
-    this.setDepartureString(one.getDepartureString());
-    this.setDestination(one.getDestination());
-    this.setArrivalString(one.getArrivalString());
-    return;
-  }
-
-  /**
    * Display function for a Flight
    */
-  public void displayFlightInfo(){
+  public void displayFlightInfo() throws ParseException {
     System.out.println("Flight");
     System.out.println("|_"+"Name: "+this.getFlightName() );
     System.out.println("|_"+"Number: "+ this.getNumber() );
     System.out.println("|_"+"Source: "+ this.getSource() );
-    System.out.println("|_"+"Departure Time: "+ this.getDepartureString() );
+    System.out.printf("|_Departure Time: %s%n", prettyDate(this.getDepartureString()));
     System.out.println("|_"+"Destination: "+ this.getDestination() );
-    System.out.println("|_"+"Arrival Time: "+ this.getArrivalString() );
+    System.out.printf("|_Arrival Time: %s%n", prettyDate(this.getArrivalString()));
     return;
+  }
+
+  /**
+   * Pretty Date format for checking the date
+   * @param inputDate
+   * @return
+   * @throws ParseException
+   */
+  public String prettyDate( String inputDate ) throws ParseException {
+    Date date;
+    DateFormat dateInput = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+    date = dateInput.parse( inputDate );
+    if( inputDate.equals(date) ){
+        date = null;
+    }
+    return date.toString();
   }
 
   private String FlightName; //= "Flight Default";
@@ -146,7 +179,4 @@ public class Flight extends AbstractFlight {
   private String departTime;
   private String dest;// = "Destination Airport";
   private String arriveTime;
-
-
-
 }

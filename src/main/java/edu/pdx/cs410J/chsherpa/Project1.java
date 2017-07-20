@@ -5,13 +5,11 @@ import edu.pdx.cs410J.ParserException;
 
 import java.io.*;
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * The main class for the CS410J airline Project
@@ -19,6 +17,9 @@ import java.util.NoSuchElementException;
 public class Project1 {
   public static boolean debugFlag = true;
 
+  /**
+   * README : This explains usage of this program
+   */
   public static void README(){
     System.out.println("Name: Chhewang");
     System.out.println("Project 1");
@@ -67,128 +68,39 @@ public class Project1 {
     if( date == null )
       throw new IllegalArgumentException("Date argument not valid");
     else if ( debugFlag == true ){
-      System.out.println(date);
-      System.out.printf(s);
+      System.out.println("\nDate Checks:\n" + date);
+      System.out.println(s);
     }
-    return s;
+    return inputDate;
   }
 
+  /**
+   *
+   * @param places
+   * @return
+   */
   public static String SrcDestLengthCheckAndNotNumeric( String places ){
     if( places.length() != 3 ) {
       System.out.println( places );
       System.out.println( "Length:" + places.length() );
-      throw new IllegalArgumentException("Flight source is not three letters");
+      throw new IllegalArgumentException("\n"+ places +" source is not three letters");
+    }
+    if (places.matches("-?\\d+(\\.d\\d+)?") ) {
+      throw new IllegalArgumentException("\n"+ places +" source has numeric values ");
     }
     return places.toUpperCase();
   }
 
-  private static void readFromFile(String fileName, Airline flights ) throws FileNotFoundException, ParserException {
-      File textFile = new File(fileName);
-      if( textFile.exists()){
-        TextParser parser = new TextParser( new FileReader(textFile));
-        flights = parser.parse();
-      }
-      else{
-        flights = new Airline();
-      }
-
-  }
-
-  public static boolean WriteToFile( String fileName, Airline flights ) throws IOException {
-    File textfile = new File(fileName);
-    TextDumper dump = new TextDumper( new PrintWriter(new FileWriter(textfile)));
-    dump.dump(flights);
-    return true;
-  }
-
-  public static void main(String[] args) throws FileNotFoundException, ParserException {
-    Class c = AbstractAirline.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
-
-    boolean readMeFlag = false;
-    boolean printFlightFlag = false;
-    boolean writeToFlag = false;
-    String fileName = new String();
-
-    List<String> optsList = new ArrayList<String>();
-    List<String> flightInfo = new ArrayList<String>();
-    List<Airline> airlines = new ArrayList<Airline>();
-
-   // System.out.println("Missing command line arguments");
-
-    if( debugFlag == true ){ //Default Print
-      for (String arg : args) {
-        System.out.println( arg );
-      }
-    }
-
-    //Parser
-    // Source: Stackoverflow for case '-' and numeric ladder
-    for( int i = 0; i < args.length; i++ ) {
-      switch (args[i].charAt(0)) {
-        case '-':
-          if (args[i].length() < 2)
-            throw new IllegalArgumentException("Not Valid: " + args[i]);
-          if( args[i].substring(1,args[i].length() ).equals("textFile") ){
-            writeToFlag = true;
-            optsList.add(args[i].substring(1,args[i].length()));
-            fileName = new String( args[i+1] );
-            i++;
-            break;
-          }
-          optsList.add(args[i].substring(1,args[i].length()));
-          break;
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '7':
-        case '8':
-        case '9':
-//          if( args[i].substring(0,1).matches("[0-9]") ) {
-            try{
-              if (args[i].charAt(1) == '/' ) {
-                flightInfo.add(new String(args[i] + " "+args[i + 1]));
-                i++;
-                break;
-              }
-              else if( args[i].charAt(2) == '/' ) {
-                flightInfo.add(new String(args[i] + " "+args[i + 1]));
-                i++;
-                break;
-              }
-            }
-            catch(IllegalArgumentException ex){
-              System.out.println("Date was not in the correct input format");
-              break;
-            }
-        default:
-          flightInfo.add(args[i]);
-          break;
-      }
-    }
-
-    /*
-    if( debugFlag == true ) {
-      flightInfo.add("name");
-      flightInfo.add("1393930");
-      flightInfo.add("src");
-      flightInfo.add("3/15/2017 10:39");
-      flightInfo.add("des");
-      flightInfo.add("03/2/2017 1:03");
-      printFlightFlag = true;
-    }
-    */
-
-   //Error catches for SIZE for LISTs for Args and
-    if( optsList.size() > 3 )
-      throw new IllegalStateException("\nOptslist should have less than " + optsList.size() +" arguments");
-
+  /**
+   * Flight Info Checks
+   * @param flightInfo
+   */
+  public static void FlightInfoCheck( List<String> flightInfo ){
     if( flightInfo.size() > 6) {
       throw new IllegalArgumentException("\nFlight info should be less than " + flightInfo.size() + " arguments");
     }
-    else if( flightInfo.size() == 0 ){
+
+    if( flightInfo.size() == 0 ){
       System.out.printf("\nFlight info is empty.\n");
       System.out.println("\nMissing Command Line Arguments");
     }
@@ -208,66 +120,146 @@ public class Project1 {
       //Date Check for Arrival
       flightInfo.set(5, dateCheck(flightInfo.get(5)) );
     }
+  }
+
+  /**
+   *
+   * @param args
+   * @throws IOException
+   * @throws ParserException
+   */
+  public static void main(String[] args) throws IOException, ParserException {
+    Class c = AbstractAirline.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
+
+    boolean readMeFlag = false;
+    boolean printFlightFlag = false;
+    String fileName = new String();
+
+    List<String> optsList = new ArrayList<String>();
+    List<String> flightInfo = new ArrayList<String>();
+    List<Airline> airlines = new ArrayList<Airline>();
+
+   // System.out.println("Missing command line arguments");
+
+    if( debugFlag == true ){ //Default Print
+      System.out.println("All args");
+      for (String arg : args) {
+        System.out.print( arg + " ");
+      }
+    }
+
+    //Parser
+    // Source: Stackoverflow for case '-' and numeric ladder
+    for( int i = 0; i < args.length; i++ ) {
+      switch (args[i].charAt(0)) {
+        case '-':
+          if (args[i].length() < 2)
+            throw new IllegalArgumentException("Flag Arg Not Valid: " + args[i]);
+          if( args[i].substring(1,args[i].length() ).equals("textFile") ){
+            optsList.add(args[i].substring(1,args[i].length()));
+            fileName = new String( args[i+1] ).trim();
+            i++;
+            break;
+          }
+          optsList.add(args[i].trim().substring(1,args[i].length()));
+          break;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '7':
+        case '8':
+        case '9':
+            try{
+              if (args[i].charAt(1) == '/' ) {
+                flightInfo.add(new String(args[i] + " "+args[i + 1]).trim());
+                i++;
+                break;
+              }
+              else if( args[i].charAt(2) == '/' ) {
+                flightInfo.add(new String(args[i] + " "+args[i + 1]).trim());
+                i++;
+                break;
+              }
+            }
+            catch(IllegalArgumentException ex){
+              System.out.println("Date was not in the correct input format");
+              break;
+            }
+        default:
+          flightInfo.add((args[i]).trim());
+          break;
+      }
+    }
+
+    if( debugFlag == true ) {
+      List<String> flightInfo2 = new ArrayList<String>();
+      flightInfo2.add("name");
+      flightInfo2.add("1393930");
+      flightInfo2.add("src");
+      flightInfo2.add("3/15/2017 10:39");
+      flightInfo2.add("des");
+      flightInfo2.add("03/2/2017 1:03");
+      printFlightFlag = true;
+    }
+
+   //Error catches for SIZE for LISTs for Args and
+    if( optsList.size() > 3 )
+      throw new IllegalStateException("\nOptslist should have less than " + optsList.size() +" arguments");
 
     //CATCH FOR FLAGS
-    for( String temp: optsList ) {
-//      System.out.println(temp);
-      if (temp.toLowerCase().equals("print")) {
+    for( String flagArgs: optsList ) {
+      if( debugFlag == true ) {
+        System.out.println(flagArgs);
+      }
+      if (flagArgs.toLowerCase().equals("print")) {
         printFlightFlag = true;
       }
-      if (temp.toUpperCase().equals("README")) {
+      if (flagArgs.toUpperCase().equals("README")) {
         readMeFlag = true;
       }
-      if (temp.toLowerCase().equals("textfile")) {
+      if (flagArgs.toLowerCase().equals("textfile")) {
         if (debugFlag == true)
-          System.out.println(fileName);
+          System.out.println("\nFileNameParsed: " + fileName);
 
         Airline AirlinefromFile = new Airline();
-        readFromFile( fileName, AirlinefromFile );
+        File text = new File(fileName);
+        if( text.exists() ){
+          TextParser parser = new TextParser(new FileReader(text));
+          AirlinefromFile = parser.parse();
+          //Check for proper input??
+          airlines.add(AirlinefromFile);
+        }
       }
     }
-
-    /**
-    Flight tre = new Flight();
-    tre.addFlightInfo(one);
-    tre.setFlightName("test");
-
-    //PROJECT TWO STUFF
-    //Set Airline Information
-    Airline two = new Airline();
-    two.setName(one.getFlightName());
-
-    for( int i = 0; i < args.length; i++ )
-      two.addFlight(one);
-
-    Airline fr = new Airline();
-    fr.setName(tre.getFlightName());
-    for( int i = 0; i < args.length; i++ )
-      fr.addFlight(tre);
-
-    airlines.add(two);
-    airlines.add(fr);
-
-    for( int i = 0; i< airlines.size(); i++ ){
-      System.out.println( airlines.get(i).getName() );
-      airlines.get(i).displayAirlineFlights();
-    }
-
-    for( Airline temp: airlines )
-        temp.displayAirlineFlights();
-    **/
 
     //PRINT AND README FLAGS
     if( readMeFlag == true ) {
       README();
+      System.exit(1);
     }
-    else if( readMeFlag != true && printFlightFlag == true ) {
+
+    //Add FlightInfo
+    FlightInfoCheck(flightInfo);
+    Flight flight = new Flight(flightInfo);
+    Airline air = new Airline();
+    air.addFlight(flight);
+    airlines.add(air);
+
+    if( printFlightFlag == true ) {
       System.out.println("Print Info Below");
-      if( flightInfo.size() > 0 && flightInfo.size() <= 6){
-        Flight one = new Flight();
-        one.addFlightInfo(flightInfo);
-        one.displayFlightInfo();
+      try {
+        flight.displayFlightInfo();
+      } catch (ParseException e) {
+        e.printStackTrace();
       }
+    }
+
+    TextDumper dumper = new TextDumper( new PrintWriter(new FileWriter(fileName,true)));
+    for( Airline temp: airlines ){
+      dumper.dump(temp);
     }
 
     System.exit(1);

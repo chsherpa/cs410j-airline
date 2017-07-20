@@ -20,8 +20,7 @@ public class AirlineTest {
         Flight flight = new Flight();
         flight.setFlightName("Grace");
         Airline air = new Airline();
-        air.setName(flight.getFlightName());
-//        air.addFlight(flight);
+        air.addFlight(flight);
         assert(air.getName().equals(flight.getFlightName()));
     }
 

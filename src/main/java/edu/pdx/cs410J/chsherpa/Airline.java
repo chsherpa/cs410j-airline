@@ -1,7 +1,6 @@
 package edu.pdx.cs410J.chsherpa;
 
 import edu.pdx.cs410J.AbstractAirline;
-import edu.pdx.cs410J.AbstractFlight;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,10 +11,6 @@ import java.util.List;
  */
 public class Airline extends AbstractAirline<Flight>{
     private List<Flight> flights = new ArrayList<Flight>();
-
-    public String getName() {
-        return this.flights.get(0).getFlightName();
-    }
 
     /**
      * Default constructor
@@ -28,10 +23,7 @@ public class Airline extends AbstractAirline<Flight>{
      * @param flights
      */
     public Airline( Flight flights){
-        if( flights.getFlightName().equals(this.flights.get(0).getFlightName()) )
-            this.flights.add(flights);
-        else
-            throw new IllegalArgumentException("Flight Name does not match Airline's Name");
+        addFlightFrom(flights);
     }
 
     @Override
@@ -40,6 +32,9 @@ public class Airline extends AbstractAirline<Flight>{
     }
 
     @Override
+    /**
+     *  Collection method to return flights properly
+     */
     public Collection<Flight> getFlights() {
         return this.flights;
     }
@@ -50,23 +45,36 @@ public class Airline extends AbstractAirline<Flight>{
     }
 
     /**
+     * Return the name of the Airlines
+     * @return Name of the first flight in the list
+     */
+    public String getName() {
+        return this.flights.get(0).getFlightName();
+    }
+    /**
      * Method to add flights object
      * @param flight
      */
     public void addFlightFrom( Flight flight ){
-        if( flight.getFlightName().equals(this.flights.get(0).getFlightName()) )
+        if( this.flights.isEmpty() )
             this.flights.add(flight);
-        else
-            throw new IllegalArgumentException("Flight Name does not match Airline's Name");
+        else{
+          if (flight.getFlightName().equals(this.flights.get(0).getFlightName()))
+              this.flights.add(flight);
+          else
+              throw new IllegalArgumentException("Flight Name does not match Airline's Name");
+        }
         return;
     }
 
     /**
-     * Method to display the Airline flights attached to this object
-     */
     public void displayAirlineFlights(){
         for(int i = 0; i < flights.size(); i++ ){
-            flights.get(i).displayFlightInfo();
+            try {
+                flights.get(i).displayFlightInfo();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -82,5 +90,6 @@ public class Airline extends AbstractAirline<Flight>{
             flights.addFlightFrom(temp);
         }
     }
+    */
 
 }

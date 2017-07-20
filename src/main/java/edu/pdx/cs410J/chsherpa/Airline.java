@@ -10,9 +10,11 @@ import java.util.List;
 /**
  * Created by chsherpa on 7/11/17.
  */
-public class Airline extends AbstractAirline{
+public class Airline extends AbstractAirline<Flight>{
+    private List<Flight> flights = new ArrayList<Flight>();
+
     public String getName() {
-        return name;
+        return this.flights.get(0).getFlightName();
     }
 
     /**
@@ -26,20 +28,20 @@ public class Airline extends AbstractAirline{
      * @param flights
      */
     public Airline( Flight flights){
-        if( flights.getFlightName().equals(this.name) )
+        if( flights.getFlightName().equals(this.flights.get(0).getFlightName()) )
             this.flights.add(flights);
         else
             throw new IllegalArgumentException("Flight Name does not match Airline's Name");
     }
 
     @Override
-    public void addFlight(AbstractFlight flight) {
-       // addFlightFrom( flights );
+    public void addFlight(Flight flight ) {
+       addFlightFrom( flight );
     }
 
     @Override
-    public Collection getFlights() {
-        return flights;
+    public Collection<Flight> getFlights() {
+        return this.flights;
     }
 
     @Override
@@ -48,19 +50,11 @@ public class Airline extends AbstractAirline{
     }
 
     /**
-     * Set the name of the Airline
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * Method to add flights object
      * @param flight
      */
     public void addFlightFrom( Flight flight ){
-        if( flight.getFlightName().equals(this.name) )
+        if( flight.getFlightName().equals(this.flights.get(0).getFlightName()) )
             this.flights.add(flight);
         else
             throw new IllegalArgumentException("Flight Name does not match Airline's Name");
@@ -89,6 +83,4 @@ public class Airline extends AbstractAirline{
         }
     }
 
-    private String name;
-    private List<Flight> flights = new ArrayList<Flight>();
 }

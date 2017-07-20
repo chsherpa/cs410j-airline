@@ -6,13 +6,17 @@ import edu.pdx.cs410J.AirlineDumper;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.io.PrintWriter;
+
 /**
  * Created by chsherpa on 7/18/17.
  */
-public class TextDumper implements AirlineDumper {
-    String newFileName;
+public class TextDumper implements AirlineDumper<Airline> {
+    private String newFileName;
+    private final PrintWriter writer;
 
-    public TextDumper(String fileName, Airline airline ) {
+    public TextDumper(/*String fileName, Airline airline,*/ PrintWriter writer ) {
+        /*
         this.newFileName = new String(fileName);
         fileCreate(this.newFileName);
 
@@ -20,6 +24,8 @@ public class TextDumper implements AirlineDumper {
         catch (IOException e) {
             e.printStackTrace();
         }
+        */
+        this.writer = writer;
     }
 
     /**
@@ -38,7 +44,10 @@ public class TextDumper implements AirlineDumper {
     }
 
     @Override
-    public void dump(AbstractAirline airline) throws IOException {
-        FileWriter write = new FileWriter(this.newFileName);
+    public void dump(Airline airline) throws IOException {
+        for( Flight flight : airline.getFlights()){
+            this.writer.print(flight.getFlightName());
+        }
+
     }
 }

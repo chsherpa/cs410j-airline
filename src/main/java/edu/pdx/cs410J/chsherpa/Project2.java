@@ -1,10 +1,9 @@
 package edu.pdx.cs410J.chsherpa;
 
 import edu.pdx.cs410J.AbstractAirline;
+import edu.pdx.cs410J.ParserException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -74,7 +73,7 @@ public class Project1 {
     return s;
   }
 
-  public static String SrcDestLengthCheck( String places ){
+  public static String SrcDestLengthCheckAndNotNumeric( String places ){
     if( places.length() != 3 ) {
       System.out.println( places );
       System.out.println( "Length:" + places.length() );
@@ -83,16 +82,26 @@ public class Project1 {
     return places.toUpperCase();
   }
 
-  private static void readFromFile(String fileName, Airline flights ) {
-      TextParser parse = new TextParser( fileName, flights );
+  private static void readFromFile(String fileName, Airline flights ) throws FileNotFoundException, ParserException {
+      File textFile = new File(fileName);
+      if( textFile.exists()){
+        TextParser parser = new TextParser( new FileReader(textFile));
+        flights = parser.parse();
+      }
+      else{
+        flights = new Airline();
+      }
+
   }
 
-  public static boolean WriteToFile( String fileName, Airline flights ){
-    TextDumper dump = new TextDumper( fileName, flights );
+  public static boolean WriteToFile( String fileName, Airline flights ) throws IOException {
+    File textfile = new File(fileName);
+    TextDumper dump = new TextDumper( new PrintWriter(new FileWriter(textfile)));
+    dump.dump(flights);
     return true;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws FileNotFoundException, ParserException {
     Class c = AbstractAirline.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
     boolean readMeFlag = false;
@@ -169,19 +178,19 @@ public class Project1 {
       flightInfo.add("des");
       flightInfo.add("03/2/2017 1:03");
       printFlightFlag = true;
-      readMeFlag = true;
     }
     */
 
    //Error catches for SIZE for LISTs for Args and
     if( optsList.size() > 3 )
-      throw new IllegalStateException("Optslist should have less than " + optsList.size() +" arguments");
+      throw new IllegalStateException("\nOptslist should have less than " + optsList.size() +" arguments");
 
     if( flightInfo.size() > 6) {
-      throw new IllegalArgumentException("Flight info should be less than " + flightInfo.size() + " arguments");
+      throw new IllegalArgumentException("\nFlight info should be less than " + flightInfo.size() + " arguments");
     }
     else if( flightInfo.size() == 0 ){
-      System.out.printf("Flight info is empty.\n");
+      System.out.printf("\nFlight info is empty.\n");
+      System.out.println("\nMissing Command Line Arguments");
     }
     else {
       //Check if fight number is positive numeric
@@ -191,9 +200,9 @@ public class Project1 {
       }
 
       // Check for Source being three letters long
-      flightInfo.set(2, SrcDestLengthCheck(flightInfo.get(2)));
+      flightInfo.set(2, SrcDestLengthCheckAndNotNumeric(flightInfo.get(2)));
       // Check for Dest being three letters long
-      flightInfo.set(4, SrcDestLengthCheck(flightInfo.get(4)));
+      flightInfo.set(4, SrcDestLengthCheckAndNotNumeric(flightInfo.get(4)));
       //Date Check for Departure
       flightInfo.set(3, dateCheck(flightInfo.get(3)) );
       //Date Check for Arrival
@@ -212,11 +221,9 @@ public class Project1 {
       if (temp.toLowerCase().equals("textfile")) {
         if (debugFlag == true)
           System.out.println(fileName);
-        File file = new File(fileName);
-        if (file.length() != 0) {
-          Airline AirlinefromFile = new Airline();
-          readFromFile( fileName, AirlinefromFile );
-        }
+
+        Airline AirlinefromFile = new Airline();
+        readFromFile( fileName, AirlinefromFile );
       }
     }
 
@@ -265,6 +272,4 @@ public class Project1 {
 
     System.exit(1);
   }
-
-
 }

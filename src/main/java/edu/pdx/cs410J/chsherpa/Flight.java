@@ -3,6 +3,7 @@ package edu.pdx.cs410J.chsherpa;
 import edu.pdx.cs410J.AbstractFlight;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 

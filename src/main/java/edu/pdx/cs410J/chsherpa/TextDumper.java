@@ -13,11 +13,18 @@ import java.io.PrintWriter;
 public class TextDumper implements AirlineDumper<Airline> {
     private final PrintWriter writer;
 
-    public TextDumper(/*String fileName, Airline airline,*/ PrintWriter writer ) {
+    /**
+     * TextDumper Constructor
+     * @param writer
+     */
+    public TextDumper( PrintWriter writer ) {
         this.writer = writer;
     }
 
     @Override
+    /**
+     * Override of the AirlineDumper Abstract class of type Airline
+     */
     public void dump(Airline airline) throws IOException {
         for (Flight flight : airline.getFlights()) {
           this.writer.println(flight.getFlightName());

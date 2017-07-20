@@ -46,6 +46,8 @@ public class Flight extends AbstractFlight {
   @Override
   /**
    * Override of parent function getNumber
+   *
+   * @return integer; no limits assigned yet
    */
   public int getNumber() {
     return flightNumber;
@@ -77,6 +79,9 @@ public class Flight extends AbstractFlight {
   }
 
   @Override
+  /**
+   * Override of the Abstract Class method getDepartureString
+   */
   public String getDepartureString() {
     return departTime;
     //throw new UnsupportedOperationException("This method is not implemented yet");

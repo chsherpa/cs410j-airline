@@ -17,11 +17,20 @@ import static edu.pdx.cs410J.chsherpa.Project1.*;
 public class TextParser implements AirlineParser<Airline>{
     private final Reader reader;
 
+    /**
+     * TextParser default constructor
+     * @param reader
+     */
     public TextParser( Reader reader ){
         this.reader = reader;
     }
 
     @Override
+    /**
+     * Override of AirlineParser Abstract class method parse() passed to type T
+     *
+     * @return Airline Object
+     */
     public Airline parse() throws ParserException {
         Airline air = new Airline();
         BufferedReader br = new BufferedReader(reader);

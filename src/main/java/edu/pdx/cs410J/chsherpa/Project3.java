@@ -239,7 +239,6 @@ public class Project3 {
         if (debugFlag == true)
           System.out.println("\nFileNameParsed: " + fileName);
 
-        /**
         Airline AirlinefromFile = new Airline();
         File text = new File(fileName);
         if( text.exists() ){
@@ -248,7 +247,6 @@ public class Project3 {
           //Check for proper input??
           airlines.add(AirlinefromFile);
         }
-         */
       }
     }
 
@@ -275,11 +273,22 @@ public class Project3 {
     }
 
     File stdout = new File(fileName);
-    if( stdout.exists() == false )
-      stdout.createNewFile();
+    stdout.createNewFile();
     TextDumper dumper = new TextDumper( new PrintWriter(new FileWriter(fileName,true)));
     for( Airline temp: airlines ){
-      dumper.dump(temp);
+      boolean indexCheck = ((airlines.indexOf(temp) + 1) < airlines.size())? true : false;
+      boolean nameCheck = (( airlines.get(airlines.indexOf(temp)+1).getName().equals(temp.getName()))? true: false );
+      if( indexCheck && !nameCheck ) {
+        dumper.dump(temp);
+        String newName = new String(airlines.get(airlines.indexOf(temp) + 1).getName().toString() + "Output.txt");
+        File newAirlineFile = new File(newName);
+        newAirlineFile.createNewFile();
+        dumper = new TextDumper(new PrintWriter(new FileWriter(newName, true)));
+      }
+      else{
+        dumper.dump(temp);
+      }
+
     }
 
     System.exit(1);

@@ -3,14 +3,13 @@ package edu.pdx.cs410J.chsherpa;
 import edu.pdx.cs410J.AirlineParser;
 import edu.pdx.cs410J.ParserException;
 
-import javax.xml.parsers.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static edu.pdx.cs410J.chsherpa.Project1.*;
+import static edu.pdx.cs410J.chsherpa.Project3.*;
 /**
  * Created by chsherpa on 7/18/17.
  */

@@ -10,12 +10,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The main class for the CS410J airline Project
  */
-public class Project1 {
-  public static boolean debugFlag = true;
+public class Project3 {
+  public static boolean debugFlag = false;
 
   /**
    * README : This explains usage of this program
@@ -26,10 +28,10 @@ public class Project1 {
     System.out.println("The objectives of this project is to be able to input the following command"
     + "\nline usage, as well having that added to a flight object for future use in Project two"
     + "\nwith multiple Flight that are airlines.");
-    System.out.println("Project1 was achieved through extensive Google searching through Stackoverflow"
+    System.out.println("Project3 was achieved through extensive Google searching through Stackoverflow"
     + "\nand the use of the Java natives libraries in the form of List<T> and Date.\n"
     + "\nUsage is described below:");
-    System.out.println( "usage: java edu.pdx.cs410J.csherpa.Project1 [options] <args>");
+    System.out.println( "usage: java edu.pdx.cs410J.csherpa.Project3 [options] <args>");
     System.out.println( "args are (in this order):");
     System.out.println( "name"+ "\t\t\t" + "The name of the airline");
     System.out.println( "flightNumber"+ "\t" + "The flight number");
@@ -124,6 +126,17 @@ public class Project1 {
 
   /**
    *
+   * @param arg
+   * @return
+   */
+  private static boolean HourFormatValidate(String arg) {
+    if( arg.trim().matches("([01]?[0-9]|2[0-3]):[0-5][0-9]"))
+      return true;
+    throw new IllegalArgumentException("The time you entered was not valid.");
+  }
+
+  /**
+   *
    * @param args
    * @throws IOException
    * @throws ParserException
@@ -133,7 +146,7 @@ public class Project1 {
 
     boolean readMeFlag = false;
     boolean printFlightFlag = false;
-    String fileName = new String();
+    String fileName = new String("FlightOutput.txt");
 
     List<String> optsList = new ArrayList<String>();
     List<String> flightInfo = new ArrayList<String>();
@@ -174,9 +187,11 @@ public class Project1 {
         case '9':
             try{
               if (args[i].charAt(1) == '/' ) {
-                flightInfo.add(new String(args[i] + " "+args[i + 1]).trim());
-                i++;
-                break;
+                if( HourFormatValidate( args[i+1]) ) {
+                  flightInfo.add(new String(args[i] + " " + args[i + 1]).trim());
+                  i++;
+                  break;
+                }
               }
               else if( args[i].charAt(2) == '/' ) {
                 flightInfo.add(new String(args[i] + " "+args[i + 1]).trim());
@@ -224,6 +239,7 @@ public class Project1 {
         if (debugFlag == true)
           System.out.println("\nFileNameParsed: " + fileName);
 
+        /**
         Airline AirlinefromFile = new Airline();
         File text = new File(fileName);
         if( text.exists() ){
@@ -232,6 +248,7 @@ public class Project1 {
           //Check for proper input??
           airlines.add(AirlinefromFile);
         }
+         */
       }
     }
 
@@ -257,6 +274,9 @@ public class Project1 {
       }
     }
 
+    File stdout = new File(fileName);
+    if( stdout.exists() == false )
+      stdout.createNewFile();
     TextDumper dumper = new TextDumper( new PrintWriter(new FileWriter(fileName,true)));
     for( Airline temp: airlines ){
       dumper.dump(temp);
@@ -264,4 +284,5 @@ public class Project1 {
 
     System.exit(1);
   }
+
 }

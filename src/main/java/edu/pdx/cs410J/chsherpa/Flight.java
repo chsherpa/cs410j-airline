@@ -5,11 +5,10 @@ import edu.pdx.cs410J.AbstractFlight;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import static edu.pdx.cs410J.chsherpa.Project1.*;
+import static edu.pdx.cs410J.chsherpa.Project3.*;
 
 public class Flight extends AbstractFlight {
 

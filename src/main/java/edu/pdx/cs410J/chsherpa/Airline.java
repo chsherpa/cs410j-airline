@@ -49,7 +49,7 @@ public class Airline extends AbstractAirline<Flight>{
      * @return Name of the first flight in the list
      */
     public String getName() {
-        return this.flights.get(0).getFlightName();
+        return (this.flights != null )?this.flights.get(0).getFlightName():null;
     }
     /**
      * Method to add flights object

@@ -10,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The main class for the CS410J airline Project
@@ -97,31 +95,31 @@ public class Project3 {
    * Flight Info Checks
    * @param flightInfo
    */
-  public static void FlightInfoCheck( List<String> flightInfo ){
+  public static boolean FlightInfoCheck(List<String> flightInfo ){
     if( flightInfo.size() > 6) {
       throw new IllegalArgumentException("\nFlight info should be less than " + flightInfo.size() + " arguments");
     }
 
     if( flightInfo.size() == 0 ){
-      System.out.printf("\nFlight info is empty.\n");
-      System.out.println("\nMissing Command Line Arguments");
+      System.out.println("\nFlight info is empty.\n");
+      System.out.println("Missing Command Line Arguments\n");
+      return true;
     }
-    else {
-      //Check if fight number is positive numeric
-      //Source: Stackoverflow
-      if (flightInfo.get(1).matches("\\d+(\\.d\\d+)?") == false) {
-        throw new IllegalArgumentException("Flight number is not a numeric value");
-      }
+    //Check if fight number is positive numeric
+    //Source: Stackoverflow
+    if (flightInfo.get(1).matches("\\d+(\\.d\\d+)?") == false) {
+      throw new IllegalArgumentException("Flight number is not a numeric value");
+    }
 
-      // Check for Source being three letters long
-      flightInfo.set(2, SrcDestLengthCheckAndNotNumeric(flightInfo.get(2)));
-      // Check for Dest being three letters long
-      flightInfo.set(4, SrcDestLengthCheckAndNotNumeric(flightInfo.get(4)));
-      //Date Check for Departure
-      flightInfo.set(3, dateCheck(flightInfo.get(3)) );
-      //Date Check for Arrival
-      flightInfo.set(5, dateCheck(flightInfo.get(5)) );
-    }
+    // Check for Source being three letters long
+    flightInfo.set(2, SrcDestLengthCheckAndNotNumeric(flightInfo.get(2)));
+    // Check for Dest being three letters long
+    flightInfo.set(4, SrcDestLengthCheckAndNotNumeric(flightInfo.get(4)));
+    //Date Check for Departure
+    flightInfo.set(3, dateCheck(flightInfo.get(3)) );
+    //Date Check for Arrival
+    flightInfo.set(5, dateCheck(flightInfo.get(5)) );
+    return true;
   }
 
   /**
@@ -136,6 +134,22 @@ public class Project3 {
   }
 
   /**
+   * File writer: Creates File object off of fileName param and uses
+   * File methods to check of atomicity. That methods will create as
+   * necessary.
+   *
+   * @param air
+   * @param fileName
+   * @throws IOException
+   */
+  private static void WriteOut(Airline air, String fileName ) throws IOException {
+    File stdout = new File(fileName);
+    stdout.createNewFile();
+    TextDumper dumper = new TextDumper(new PrintWriter(new FileWriter(fileName, false)));
+    dumper.dump(air);
+  }
+
+  /**
    *
    * @param args
    * @throws IOException
@@ -146,11 +160,11 @@ public class Project3 {
 
     boolean readMeFlag = false;
     boolean printFlightFlag = false;
-    String fileName = new String("FlightOutput.txt");
+    String fileName = new String();
 
     List<String> optsList = new ArrayList<String>();
     List<String> flightInfo = new ArrayList<String>();
-    List<Airline> airlines = new ArrayList<Airline>();
+    Airline airlineFromFile = new Airline();
 
    // System.out.println("Missing command line arguments");
 
@@ -161,19 +175,25 @@ public class Project3 {
       }
     }
 
-    //Parser
+    //System Argv Parser
     // Source: Stackoverflow for case '-' and numeric ladder
     for( int i = 0; i < args.length; i++ ) {
       switch (args[i].charAt(0)) {
-        case '-':
+        case '-'://Flag Catch
           if (args[i].length() < 2)
             throw new IllegalArgumentException("Flag Arg Not Valid: " + args[i]);
+
+          //TextFile Catch; create new file if file does not exists
           if( args[i].substring(1,args[i].length() ).equals("textFile") ){
+            File testExists = new File( args[i+1].trim() );
+            testExists.createNewFile();
             optsList.add(args[i].substring(1,args[i].length()));
             fileName = new String( args[i+1] ).trim();
             i++;
             break;
           }
+
+          //Other flags catch
           optsList.add(args[i].trim().substring(1,args[i].length()));
           break;
         case '0':
@@ -185,24 +205,21 @@ public class Project3 {
         case '7':
         case '8':
         case '9':
-            try{
-              if (args[i].charAt(1) == '/' ) {
-                if( HourFormatValidate( args[i+1]) ) {
-                  flightInfo.add(new String(args[i] + " " + args[i + 1]).trim());
-                  i++;
-                  break;
-                }
-              }
-              else if( args[i].charAt(2) == '/' ) {
-                flightInfo.add(new String(args[i] + " "+args[i + 1]).trim());
-                i++;
-                break;
-              }
-            }
-            catch(IllegalArgumentException ex){
-              System.out.println("Date was not in the correct input format");
+          //SimpleDateCheck: Only breaks if in format ##/ or #/
+          if (args[i].charAt(1) == '/' ) {
+            if( HourFormatValidate( args[i+1]) ) {
+              flightInfo.add(new String(args[i] + " " + args[i + 1]).trim());
+              i++;
               break;
             }
+          }
+          else if( args[i].charAt(2) == '/' ) {
+            if( HourFormatValidate( args[i+1]) ) {
+              flightInfo.add(new String(args[i] + " " + args[i + 1]).trim());
+              i++;
+              break;
+            }
+          }
         default:
           flightInfo.add((args[i]).trim());
           break;
@@ -236,17 +253,12 @@ public class Project3 {
         readMeFlag = true;
       }
       if (flagArgs.toLowerCase().equals("textfile")) {
-        if (debugFlag == true)
+        if (debugFlag == true) {
           System.out.println("\nFileNameParsed: " + fileName);
-
-        Airline AirlinefromFile = new Airline();
-        File text = new File(fileName);
-        if( text.exists() ){
-          TextParser parser = new TextParser(new FileReader(text));
-          AirlinefromFile = parser.parse();
-          //Check for proper input??
-          airlines.add(AirlinefromFile);
         }
+
+        TextParser parser = new TextParser(new FileReader(fileName));
+        airlineFromFile = parser.parse(); //Check for proper input done in airline class
       }
     }
 
@@ -256,12 +268,11 @@ public class Project3 {
       System.exit(1);
     }
 
-    //Add FlightInfo
+    //Add FlightInfo from System Argv Parsed Info
     FlightInfoCheck(flightInfo);
     Flight flight = new Flight(flightInfo);
-    Airline air = new Airline();
-    air.addFlight(flight);
-    airlines.add(air);
+    Airline AddedAirline = new Airline();
+    AddedAirline.addFlight(flight);
 
     if( printFlightFlag == true ) {
       System.out.println("Print Info Below");
@@ -272,26 +283,26 @@ public class Project3 {
       }
     }
 
-    File stdout = new File(fileName);
-    stdout.createNewFile();
-    TextDumper dumper = new TextDumper( new PrintWriter(new FileWriter(fileName,true)));
-    for( Airline temp: airlines ){
-      boolean indexCheck = ((airlines.indexOf(temp) + 1) < airlines.size())? true : false;
-      boolean nameCheck = (( airlines.get(airlines.indexOf(temp)+1).getName().equals(temp.getName()))? true: false );
-      if( indexCheck && !nameCheck ) {
-        dumper.dump(temp);
-        String newName = new String(airlines.get(airlines.indexOf(temp) + 1).getName().toString() + "Output.txt");
-        File newAirlineFile = new File(newName);
-        newAirlineFile.createNewFile();
-        dumper = new TextDumper(new PrintWriter(new FileWriter(newName, true)));
-      }
-      else{
-        dumper.dump(temp);
-      }
+    System.out.println("\nDumping Airline Info\n");
 
+    if( airlineFromFile.getFlights().isEmpty() ) {
+      fileName = new String( flight.getFlightName() + "Flights.txt");
+      WriteOut(AddedAirline, fileName );
+    }
+    else if( AddedAirline.getName().equals(airlineFromFile.getName())){
+      //Add the new Airline Flight to the old Airlines Flight
+      airlineFromFile.addFlight( flight );
+      WriteOut(airlineFromFile, fileName);
+    }
+    else{
+      //WriteOut both the parsed in airline and the new added airline from the parameter
+      WriteOut(airlineFromFile, fileName);
+      String fileName2 = new String( AddedAirline.getName() + "Flights.txt");
+      WriteOut(AddedAirline, fileName2 );
     }
 
     System.exit(1);
   }
+
 
 }

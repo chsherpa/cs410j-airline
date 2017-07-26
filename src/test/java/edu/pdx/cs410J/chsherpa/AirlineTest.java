@@ -9,11 +9,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 
 public class AirlineTest {
-    @Test
-    public void initialAirlineNameReturnsNull() {
-        Airline air = new Airline();
-        assertThat(air.getName(),is(nullValue()));
-    }
 
     @Test
     public void addAirlineTest(){

@@ -38,9 +38,14 @@ public class TextParser implements AirlineParser<Airline>{
         try {
             for (String line = br.readLine(); line != null; line = br.readLine()) {
                 if( line.compareTo("--END--") == 0){
-                    FlightInfoCheck(flightInfo);
-                    air.addFlight(new Flight(flightInfo));
-                    flightInfo.clear();
+                    if( FlightInfoCheck(flightInfo) )
+                    {
+                        air.addFlight(new Flight(flightInfo));
+                        flightInfo.clear();
+                    }
+                    else{
+                        flightInfo.clear();
+                    }
                 }
                 else {
                     flightInfo.add(line);

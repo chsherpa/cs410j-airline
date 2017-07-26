@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import static edu.pdx.cs410J.chsherpa.Project3.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Flight extends AbstractFlight {
 
@@ -133,8 +134,8 @@ public class Flight extends AbstractFlight {
    * @param flightInfo List Object of flights
    */
   public void addFlightInfo(List<String> flightInfo) {
-      FlightInfoCheck(flightInfo);
-      if( flightInfo.size() == 6){
+    try {
+      if (flightInfo.size() == 6) {
         this.setFlightName(flightInfo.get(0));
         this.setNumber(Integer.parseInt(flightInfo.get(1)));
         this.setSource(flightInfo.get(2));
@@ -142,9 +143,11 @@ public class Flight extends AbstractFlight {
         this.setDestination(flightInfo.get(4));
         this.setArrivalString(flightInfo.get(5));
       }
-      else
-        throw new IllegalArgumentException("Not enough arguments for adding to flight info");
-      return;
+    }
+    catch( IllegalArgumentException ex )
+    {
+      throw new IllegalArgumentException("Not enough arguments for adding to flight info");
+    }
   }
 
   /**

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Formatter;
 
 /**
  * The main class for the CS410J airline Project
@@ -21,27 +22,46 @@ public class Project3 {
    * README : This explains usage of this program
    */
   public static void README(){
-    System.out.println("Name: Chhewang");
-    System.out.println("Project 1");
+    int ProjNum = 3;
+    System.out.println("Name: Chhewang Sherpa");
+    System.out.println("Project " + ProjNum );
     System.out.println("The objectives of this project is to be able to input the following command"
     + "\nline usage, as well having that added to a flight object for future use in Project two"
     + "\nwith multiple Flight that are airlines.");
-    System.out.println("Project3 was achieved through extensive Google searching through Stackoverflow"
+    System.out.println("Project "+ ProjNum +" was achieved through extensive Google searching through Stackoverflow"
     + "\nand the use of the Java natives libraries in the form of List<T> and Date.\n"
     + "\nUsage is described below:");
     System.out.println( "usage: java edu.pdx.cs410J.csherpa.Project3 [options] <args>");
     System.out.println( "args are (in this order):");
-    System.out.println( "name"+ "\t\t\t" + "The name of the airline");
-    System.out.println( "flightNumber"+ "\t" + "The flight number");
-    System.out.println( "src" +"\t\t\t\t" + "Three-letter code of departure airport");
-    System.out.println( "departTime"+ "\t\t" + "Departure date and time (24-hour time)");
-    System.out.println( "dest"+ "\t\t\t" + "Three-letter code of arrival airport");
-    System.out.println( "arriveTime"+ "\t\t" + "Arrival date and time (24-hour time)");
+    System.out.printf("%-20s%s","name", "The name of the airline\n");
+    System.out.printf("%-20s%s", "flightNumber", "The flight number\n");
+    System.out.printf("%-20s%s", "src", "Three-letter code of departure airport\n");
+    System.out.printf("%-20s%s", "departTime", "Departure date and time (12-hour time)\n");
+    System.out.printf("%-20s%s","dest", "Three-letter code of arrival airport\n");
+    System.out.printf("%-20s%s","arriveTime", "Arrival date and time (12-hour time)\n");
     System.out.println( "|_Date and time should be in the format: mm/dd/yyyy hh:mm");
     System.out.println( "\nflag options (options may appear in any order):");
-    System.out.println( "-textFile file" +"\t" +"Where to read/write the airline info");
-    System.out.println( "-print"+ "\t\t\t" + "Prints a description of the new flight");
-    System.out.println( "-README"+ "\t\t\t" + "Prints a README for this project and exits");
+    System.out.printf("%-20s%s", "-pretty file", "Pretty print the airline’s flights to\n");
+    System.out.printf("%-20s%s","", "a text file or standard out (file -)\n");
+    System.out.printf("%-20s%s","-textFile file", "Where to read/write the airline info\n");
+    System.out.printf("%-20s%s","-print", "Prints a description of the new flight\n");
+    System.out.printf("%-20s%s","-README", "Prints a README for this project and exits\n");
+
+    /*
+    System.out.println( "name"+ "\t\t\t\t" + "The name of the airline");
+    System.out.println( "flightNumber"+ "\t\t" + "The flight number");
+    System.out.println( "src" +"\t\t\t\t\t" + "Three-letter code of departure airport");
+    System.out.println( "departTime"+ "\t\t\t" + "Departure date and time (24-hour time)");
+    System.out.println( "dest"+ "\t\t\t\t" + "Three-letter code of arrival airport");
+    System.out.println( "arriveTime"+ "\t\t\t" + "Arrival date and time (24-hour time)");
+    System.out.println( "|_Date and time should be in the format: mm/dd/yyyy hh:mm");
+    System.out.println( "\nflag options (options may appear in any order):");
+    System.out.println("-pretty file" +"\t\t" + "Pretty print the airline’s flights to\n" +
+            "\t\t\t\t\ta text file or standard out (file -)");
+    System.out.println( "-textFile file" +"\t\t" +"Where to read/write the airline info");
+    System.out.println( "-print"+ "\t\t\t\t" + "Prints a description of the new flight");
+    System.out.println( "-README"+ "\t\t\t\t" + "Prints a README for this project and exits");
+    */
   }
 
   /**
@@ -96,15 +116,24 @@ public class Project3 {
    * @param flightInfo
    */
   public static boolean FlightInfoCheck(List<String> flightInfo ){
-    if( flightInfo.size() > 6) {
-      throw new IllegalArgumentException("\nFlight info should be less than " + flightInfo.size() + " arguments");
+    try
+    {
+        if( flightInfo.size() > 6 )
+        {
+          System.out.println("\nFlight info should only have 6 arguments.\n");
+          System.out.println("System passed in the following arguments: " + flightInfo.toString() );
+        }
+        if( flightInfo.size() < 6 )
+        {
+          System.out.println("\nFlight info needs 6 arguments\n");
+          System.out.println("System passed in the following arguments: " + flightInfo.toString() );
+        }
+    }
+    catch( IllegalArgumentException ex)
+    {
+      throw new IllegalArgumentException( "\nSystem passed in the following arguments: " + ex.getMessage() +" " +flightInfo.toString() );
     }
 
-    if( flightInfo.size() == 0 ){
-      System.out.println("\nFlight info is empty.\n");
-      System.out.println("Missing Command Line Arguments\n");
-      return true;
-    }
     //Check if fight number is positive numeric
     //Source: Stackoverflow
     if (flightInfo.get(1).matches("\\d+(\\.d\\d+)?") == false) {
@@ -120,17 +149,6 @@ public class Project3 {
     //Date Check for Arrival
     flightInfo.set(5, dateCheck(flightInfo.get(5)) );
     return true;
-  }
-
-  /**
-   *
-   * @param arg
-   * @return
-   */
-  private static boolean HourFormatValidate(String arg) {
-    if( arg.trim().matches("([01]?[0-9]|2[0-3]):[0-5][0-9]"))
-      return true;
-    throw new IllegalArgumentException("The time you entered was not valid.");
   }
 
   /**
@@ -160,9 +178,12 @@ public class Project3 {
 
     boolean readMeFlag = false;
     boolean printFlightFlag = false;
+    boolean writeOutFlag = false;
+    boolean prettyFlag = false;
     String fileName = new String();
+    String prettyPrintFile = new String();
 
-    List<String> optsList = new ArrayList<String>();
+    List<String> FlagOptionsList = new ArrayList<String>();
     List<String> flightInfo = new ArrayList<String>();
     Airline airlineFromFile = new Airline();
 
@@ -187,14 +208,23 @@ public class Project3 {
           if( args[i].substring(1,args[i].length() ).equals("textFile") ){
             File testExists = new File( args[i+1].trim() );
             testExists.createNewFile();
-            optsList.add(args[i].substring(1,args[i].length()));
+            FlagOptionsList.add(args[i].substring(1,args[i].length()));
             fileName = new String( args[i+1] ).trim();
+            writeOutFlag = true;
             i++;
             break;
           }
 
+          //Pretty Print Catch
+          if( args[i].substring(1,args[i].length() ).toLowerCase().equals("pretty") )
+          {
+              FlagOptionsList.add(args[i].substring(1,args[i].length()));
+              prettyPrintFile = new String( args[i+1] ).trim();
+              i++;
+          }
+
           //Other flags catch
-          optsList.add(args[i].trim().substring(1,args[i].length()));
+          FlagOptionsList.add(args[i].trim().substring(1,args[i].length()));
           break;
         case '0':
         case '1':
@@ -206,18 +236,35 @@ public class Project3 {
         case '8':
         case '9':
           //SimpleDateCheck: Only breaks if in format ##/ or #/
-          if (args[i].charAt(1) == '/' ) {
-            if( HourFormatValidate( args[i+1]) ) {
-              flightInfo.add(new String(args[i] + " " + args[i + 1]).trim());
-              i++;
-              break;
+          if( args[i].charAt(1) == '/' || args[i].charAt(2) == '/' )
+          {
+            if ( args[i].trim().matches("\\d{1,2}/\\d{1,2}/\\d{4}") ) //DateRegexMatch
+            {
+              try
+              {
+                if (args[i + 1] != null && args[i + 1].trim().matches("([01]?[0-9]|2[0-3]):[0-5][0-9]")) //TimeRegexMatch
+                {
+                  flightInfo.add(new String(args[i] + " " + args[i + 1]).trim());
+                  i++;
+                  break;
+                }
+              }
+              catch ( IllegalArgumentException ex )
+              {
+                throw new IllegalArgumentException("\nTime Arg passed in from Command Line not valid"
+                        + "\nTime Arg passed: " + args[i + 1].toString() +"\n");
+              }
+              catch ( IndexOutOfBoundsException ex)
+              {
+                throw new IndexOutOfBoundsException( "\nMissing arguments: #"+ ex.getMessage()
+                        + "\nCause: "+ ex.getCause() );
+              }
+
             }
-          }
-          else if( args[i].charAt(2) == '/' ) {
-            if( HourFormatValidate( args[i+1]) ) {
-              flightInfo.add(new String(args[i] + " " + args[i + 1]).trim());
-              i++;
-              break;
+            else
+            {
+              throw new IllegalArgumentException("\nDate Args passed in from Command Line not valid"
+                      + "\nDate Passed In: " + args[i].toString());
             }
           }
         default:
@@ -226,7 +273,8 @@ public class Project3 {
       }
     }
 
-    if( debugFlag == true ) {
+    if( debugFlag == true )
+    {
       List<String> flightInfo2 = new ArrayList<String>();
       flightInfo2.add("name");
       flightInfo2.add("1393930");
@@ -238,32 +286,43 @@ public class Project3 {
     }
 
    //Error catches for SIZE for LISTs for Args and
-    if( optsList.size() > 3 )
-      throw new IllegalStateException("\nOptslist should have less than " + optsList.size() +" arguments");
+    if( FlagOptionsList.size() > 3 )
+      throw new IllegalStateException("\nOptslist should have less than " + FlagOptionsList.size() +" arguments");
 
     //CATCH FOR FLAGS
-    for( String flagArgs: optsList ) {
-      if( debugFlag == true ) {
+    for( String flagArgs: FlagOptionsList )
+    {
+      if( debugFlag == true )
+      {
         System.out.println(flagArgs);
       }
-      if (flagArgs.toLowerCase().equals("print")) {
+      if (flagArgs.toLowerCase().equals("print"))
+      {
         printFlightFlag = true;
       }
-      if (flagArgs.toUpperCase().equals("README")) {
+      if (flagArgs.toUpperCase().equals("README"))
+      {
         readMeFlag = true;
       }
-      if (flagArgs.toLowerCase().equals("textfile")) {
-        if (debugFlag == true) {
+      if (flagArgs.toLowerCase().equals("textfile"))
+      {
+        if (debugFlag == true)
+        {
           System.out.println("\nFileNameParsed: " + fileName);
         }
 
         TextParser parser = new TextParser(new FileReader(fileName));
         airlineFromFile = parser.parse(); //Check for proper input done in airline class
       }
+      if( flagArgs.toLowerCase().equals("pretty"))
+      {
+          
+      }
     }
 
     //PRINT AND README FLAGS
-    if( readMeFlag == true ) {
+    if( readMeFlag == true )
+    {
       README();
       System.exit(1);
     }
@@ -283,26 +342,24 @@ public class Project3 {
       }
     }
 
-    System.out.println("\nDumping Airline Info\n");
+    if( writeOutFlag == true ) {
+      System.out.println("\nDumping Airline Info into file\n");
 
-    if( airlineFromFile.getFlights().isEmpty() ) {
-      fileName = new String( flight.getFlightName() + "Flights.txt");
-      WriteOut(AddedAirline, fileName );
-    }
-    else if( AddedAirline.getName().equals(airlineFromFile.getName())){
-      //Add the new Airline Flight to the old Airlines Flight
-      airlineFromFile.addFlight( flight );
-      WriteOut(airlineFromFile, fileName);
-    }
-    else{
-      //WriteOut both the parsed in airline and the new added airline from the parameter
-      WriteOut(airlineFromFile, fileName);
-      String fileName2 = new String( AddedAirline.getName() + "Flights.txt");
-      WriteOut(AddedAirline, fileName2 );
+      if (airlineFromFile.getFlights().isEmpty()) {
+        fileName = new String(flight.getFlightName() + "Flights.txt");
+        WriteOut(AddedAirline, fileName);
+      } else if (AddedAirline.getName().equals(airlineFromFile.getName())) {
+        //Add the new Airline Flight to the old Airlines Flight
+        airlineFromFile.addFlight(flight);
+        WriteOut(airlineFromFile, fileName);
+      } else {
+        //WriteOut both the parsed in airline and the new added airline from the parameter
+        WriteOut(airlineFromFile, fileName);
+        String fileName2 = new String(AddedAirline.getName() + "Flights.txt");
+        WriteOut(AddedAirline, fileName2);
+      }
     }
 
     System.exit(1);
   }
-
-
 }

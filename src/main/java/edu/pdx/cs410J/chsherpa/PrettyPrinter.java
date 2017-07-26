@@ -69,12 +69,12 @@ public class PrettyPrinter {
      * @return
      * @throws ParseException
      */
-    private String PrettyDateAndTime(String date ) throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        SimpleDateFormat pdf = new SimpleDateFormat("EEE,MMM d yyyy, hh:mm aaa");
-        Date dDate= df.parse(date);
-        String format = pdf.format(dDate);
-        return format;
+    private String PrettyDateAndTime( String date ) throws ParseException {
+//      SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+      DateFormat sf = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
+      SimpleDateFormat pdf = new SimpleDateFormat("EEE, MMM d yyyy, hh:mm aaa");
+      Date dDate= sf.parse(date);
+      return pdf.format(dDate);
     }
 
     /**

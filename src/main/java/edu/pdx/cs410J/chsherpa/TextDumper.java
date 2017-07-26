@@ -6,6 +6,10 @@ import edu.pdx.cs410J.AirlineDumper;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by chsherpa on 7/18/17.
@@ -25,7 +29,7 @@ public class TextDumper implements AirlineDumper<Airline> {
     /**
      * Override of the AirlineDumper Abstract class of type Airline
      */
-    public void dump(Airline airline) throws IOException {
+    public void dump(Airline airline) throws IOException{
         for ( Flight flight : airline.getFlights() )
         {
           this.writer.println( flight.getFlightName() );
@@ -38,4 +42,6 @@ public class TextDumper implements AirlineDumper<Airline> {
         }
         this.writer.flush();
     }
+
+
 }

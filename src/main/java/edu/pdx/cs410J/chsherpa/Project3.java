@@ -196,6 +196,13 @@ public class Project3 {
     dumper.dump(air);
   }
 
+  /**
+   * Pretty Print Out method for the Main Class
+   * @param air Airline Object
+   * @param fileName String; Name of the file to be written too
+   * @throws IOException Standard IO exception catch
+   * @throws ParseException Standard ParseException catch
+   */
   private static void PrettyWriteOut( Airline air, String fileName ) throws IOException, ParseException {
     PrettyPrinter dumper = new PrettyPrinter();
 
@@ -250,10 +257,10 @@ public class Project3 {
 
           //TextFile Catch; create new file if file does not exists
           if( args[i].substring(1,args[i].length() ).equals("textFile") ){
-            File testExists = new File( args[i+1].trim() );
+            File testExists = new File(args[i + 1].trim());
             testExists.createNewFile();
-            FlagOptionsList.add(args[i].substring(1,args[i].length()));
-            fileName = new String( args[i+1] ).trim();
+            FlagOptionsList.add(args[i].substring(1, args[i].length()));
+            fileName = new String(args[i + 1]).trim();
             writeOutFlag = true;
             i++;
             break;
@@ -317,7 +324,7 @@ public class Project3 {
       }
     }
 
-    if( debugFlag == true )
+    if( debugFlag == true ) //Debugger Flight Object
     {
       List<String> flightInfo2 = new ArrayList<String>();
       flightInfo2.add("name");
@@ -355,6 +362,7 @@ public class Project3 {
           System.out.println("\nFileNameParsed: " + fileName);
         }
 
+        //fileName = new String(flight.getFlightName() + "Flights.txt");
         TextParser parser = new TextParser(new FileReader(fileName));
         airlineFromFile = parser.parse(); //Check for proper input done in airline class
       }
@@ -389,15 +397,12 @@ public class Project3 {
 
     if( writeOutFlag == true )
     {
-      System.out.println("\nDumping Airline Info into file\n");
-
       if (airlineFromFile.getFlights().isEmpty()) {
-        fileName = new String(flight.getFlightName() + "Flights.txt");
         WriteOut(AddedAirline, fileName);
       } else if (AddedAirline.getName().equals(airlineFromFile.getName())) {
         //Add the new Airline Flight to the old Airlines Flight
+        //Sort happens during adding of flight
         airlineFromFile.addFlight(flight);
-        //TODO SORT OF FLIGHT FOR WRITEOUT
         WriteOut(airlineFromFile, fileName);
       } else {
         //WriteOut both the parsed in airline and the new added airline from the parameter
@@ -413,8 +418,7 @@ public class Project3 {
         PrettyWriteOut( AddedAirline, prettyPrintFile );
       } else if (AddedAirline.getName().equals(airlineFromFile.getName())) {
         //Add the new Airline Flight to the old Airlines Flight
-        airlineFromFile.addFlight(flight);
-        //TODO SORT OF FLIGHT FOR PRETTY PRINT
+        airlineFromFile.addFlight(flight); //Add flight sorts it
         PrettyWriteOut( airlineFromFile, prettyPrintFile );
       } else {
         //WriteOut both the parsed in airline and the new added airline from the parameter

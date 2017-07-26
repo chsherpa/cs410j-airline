@@ -2,9 +2,14 @@ package edu.pdx.cs410J.chsherpa;
 
 import edu.pdx.cs410J.AbstractAirline;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * Created by chsherpa on 7/11/17.
@@ -51,6 +56,7 @@ public class Airline extends AbstractAirline<Flight>{
     public String getName() {
         return (this.flights != null )?this.flights.get(0).getFlightName():null;
     }
+
     /**
      * Method to add flights object
      * @param flight
@@ -60,36 +66,42 @@ public class Airline extends AbstractAirline<Flight>{
             this.flights.add(flight);
         else{
           if (flight.getFlightName().equals(this.flights.get(0).getFlightName()))
+          {
+            if( this.flights.size() > 1 )
+            {
               this.flights.add(flight);
+              Arrays.sort(new List[]{flights});
+
+              /*
+              this.flights.sort(new Comparator<Flight>() {
+                DateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm" );
+                @Override
+                public int compare(Flight f1, Flight f2)
+                {
+                  int value1 = f1.getSource().compareTo( f2.getSource() );
+                  if( value1 == 0 )
+                  {
+                    try{
+                      return f.parse( f1.getDepartureString() ).compareTo( f.parse(f2.getDepartureString()) );
+                    }
+                    catch (ParseException e)
+                    {
+                      throw new IllegalArgumentException(e);
+                    }
+                  }
+                  return value1;
+                }
+              });
+              */
+            }
+            else
+            {
+              this.flights.add(flight);
+            }
+          }
           else
               throw new IllegalArgumentException("Flight Name does not match Airline's Name");
         }
         return;
     }
-
-    /**
-    public void displayAirlineFlights(){
-        for(int i = 0; i < flights.size(); i++ ){
-            try {
-                flights.get(i).displayFlightInfo();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void copyTo( Airline flights ){
-        for( Flight temp : this.flights){
-            flights.flights.add(temp);
-            //flights.addFlightFrom(temp);
-        }
-    }
-
-    public void copyFrom( Airline flights ){
-        for( Flight temp: flights.flights ){
-            flights.addFlightFrom(temp);
-        }
-    }
-    */
-
 }

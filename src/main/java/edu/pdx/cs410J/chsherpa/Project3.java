@@ -10,7 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Formatter;
+import java.lang.Comparable;
+
 
 /**
  * The main class for the CS410J airline Project
@@ -112,6 +113,33 @@ public class Project3 {
   }
 
   /**
+   * Proper String Case Everything
+   * @param proper
+   * @return String First Letter is UpperCased, rest are left as is
+   */
+  private static String Proper( String proper )
+  {
+    StringBuilder titled = new StringBuilder();
+    boolean nextTitledCase = true;
+
+    for( char c: proper.toCharArray() )
+    {
+      if( Character.isSpaceChar(c) )
+      {
+        nextTitledCase = true;
+      }
+      else if( nextTitledCase )
+      {
+        c = Character.toTitleCase(c);
+        nextTitledCase = false;
+      }
+
+      titled.append(c);
+    }
+    return titled.toString();
+  }
+
+  /**
    * Flight Info Checks
    * @param flightInfo
    */
@@ -134,6 +162,7 @@ public class Project3 {
       throw new IllegalArgumentException( "\nSystem passed in the following arguments: " + ex.getMessage() +" " +flightInfo.toString() );
     }
 
+    flightInfo.set(0, Proper(flightInfo.get(0)) );
     //Check if fight number is positive numeric
     //Source: Stackoverflow
     if (flightInfo.get(1).matches("\\d+(\\.d\\d+)?") == false) {
@@ -167,13 +196,28 @@ public class Project3 {
     dumper.dump(air);
   }
 
+  private static void PrettyWriteOut( Airline air, String fileName ) throws IOException, ParseException {
+    PrettyPrinter dumper = new PrettyPrinter();
+
+    if(fileName.trim().equals("-") ){
+      dumper.PrettyPrint(air);
+    }
+    else
+    {
+      File stdout = new File(fileName);
+      stdout.createNewFile();
+      dumper = new PrettyPrinter(new PrintWriter(new FileWriter(fileName, false)));
+      dumper.PrettyPrintDump(air, fileName );
+    }
+  }
+
   /**
    *
    * @param args
    * @throws IOException
    * @throws ParserException
    */
-  public static void main(String[] args) throws IOException, ParserException {
+  public static void main(String[] args) throws IOException, ParserException, ParseException {
     Class c = AbstractAirline.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
     boolean readMeFlag = false;
@@ -316,7 +360,7 @@ public class Project3 {
       }
       if( flagArgs.toLowerCase().equals("pretty"))
       {
-          
+          prettyFlag = true;
       }
     }
 
@@ -333,7 +377,8 @@ public class Project3 {
     Airline AddedAirline = new Airline();
     AddedAirline.addFlight(flight);
 
-    if( printFlightFlag == true ) {
+    if( printFlightFlag == true )
+    {
       System.out.println("Print Info Below");
       try {
         flight.displayFlightInfo();
@@ -342,7 +387,8 @@ public class Project3 {
       }
     }
 
-    if( writeOutFlag == true ) {
+    if( writeOutFlag == true )
+    {
       System.out.println("\nDumping Airline Info into file\n");
 
       if (airlineFromFile.getFlights().isEmpty()) {
@@ -351,6 +397,7 @@ public class Project3 {
       } else if (AddedAirline.getName().equals(airlineFromFile.getName())) {
         //Add the new Airline Flight to the old Airlines Flight
         airlineFromFile.addFlight(flight);
+        //TODO SORT OF FLIGHT FOR WRITEOUT
         WriteOut(airlineFromFile, fileName);
       } else {
         //WriteOut both the parsed in airline and the new added airline from the parameter
@@ -360,6 +407,22 @@ public class Project3 {
       }
     }
 
+    if( prettyFlag == true )
+    {
+      if (airlineFromFile.getFlights().isEmpty()) {
+        PrettyWriteOut( AddedAirline, prettyPrintFile );
+      } else if (AddedAirline.getName().equals(airlineFromFile.getName())) {
+        //Add the new Airline Flight to the old Airlines Flight
+        airlineFromFile.addFlight(flight);
+        //TODO SORT OF FLIGHT FOR PRETTY PRINT
+        PrettyWriteOut( airlineFromFile, prettyPrintFile );
+      } else {
+        //WriteOut both the parsed in airline and the new added airline from the parameter
+        PrettyWriteOut( AddedAirline, prettyPrintFile );
+        String fileName2 = new String(AddedAirline.getName() + "Flights.txt");
+        PrettyWriteOut( AddedAirline, fileName2 );
+      }
+    }
     System.exit(1);
   }
 }

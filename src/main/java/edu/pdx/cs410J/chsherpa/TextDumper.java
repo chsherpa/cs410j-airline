@@ -26,13 +26,14 @@ public class TextDumper implements AirlineDumper<Airline> {
      * Override of the AirlineDumper Abstract class of type Airline
      */
     public void dump(Airline airline) throws IOException {
-        for (Flight flight : airline.getFlights()) {
-          this.writer.println(flight.getFlightName());
-          this.writer.println(flight.getNumber());
-          this.writer.println(flight.getSource());
-          this.writer.println(flight.getDepartureString());
-          this.writer.println(flight.getDestination());
-          this.writer.println(flight.getDepartureString());
+        for ( Flight flight : airline.getFlights() )
+        {
+          this.writer.println( flight.getFlightName() );
+          this.writer.println( flight.getNumber() );
+          this.writer.println( flight.getSource() );
+          this.writer.println( flight.getDepartureString() );
+          this.writer.println( flight.getDestination() );
+          this.writer.println( flight.getArrivalString() );
           this.writer.println("--END--");
         }
         this.writer.flush();

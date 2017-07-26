@@ -172,7 +172,7 @@ public class Flight extends AbstractFlight {
    */
   public String prettyDate( String inputDate ) throws ParseException {
     Date date;
-    DateFormat dateInput = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+    DateFormat dateInput = new SimpleDateFormat("MM/dd/yyyy HH:mm");
     date = dateInput.parse( inputDate );
     if( inputDate.equals(date) ){
         date = null;

@@ -231,7 +231,7 @@ public class Flight extends AbstractFlight implements Comparable<Flight>
    */
   private String ShortDate(String SourceDate) throws ParseException
   {
-    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
     Date dDate = sdf.parse(SourceDate);
     DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
     return df.format(dDate);

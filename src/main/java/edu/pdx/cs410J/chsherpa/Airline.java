@@ -67,28 +67,6 @@ public class Airline extends AbstractAirline<Flight>{
             {
               this.flights.add(flight);
               Arrays.sort(new List[]{flights});
-
-              /*
-              this.flights.sort(new Comparator<Flight>() {
-                DateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm" );
-                @Override
-                public int compare(Flight f1, Flight f2)
-                {
-                  int value1 = f1.getSource().compareTo( f2.getSource() );
-                  if( value1 == 0 )
-                  {
-                    try{
-                      return f.parse( f1.getDepartureString() ).compareTo( f.parse(f2.getDepartureString()) );
-                    }
-                    catch (ParseException e)
-                    {
-                      throw new IllegalArgumentException(e);
-                    }
-                  }
-                  return value1;
-                }
-              });
-              */
             }
             else
             {

@@ -7,9 +7,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static edu.pdx.cs410J.chsherpa.Project3.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 public class Flight extends AbstractFlight implements Comparable<Flight>
 {
 

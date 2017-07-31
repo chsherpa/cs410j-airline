@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.lang.Comparable;
 
 
 /**
@@ -96,9 +95,9 @@ public class Project3 {
   }
 
   /**
-   *
-   * @param places
-   * @return
+   * Source and Destination Check for Length and not being numeric
+   * @param places  SRC/DEST input
+   * @return  String value of SRC/DEST input in uppercase
    */
   public static String SrcDestLengthCheckAndNotNumeric( String places ){
     if( places.length() != 3 ) {

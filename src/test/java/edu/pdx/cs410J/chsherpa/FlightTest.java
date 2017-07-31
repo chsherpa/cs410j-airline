@@ -10,6 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class FlightTest {
 
+  /*
   @Test
   public void initialValueForFlightNameReturnsNull(){
     Flight flight = new Flight();
@@ -46,6 +47,7 @@ public class FlightTest {
     assertThat(flight.getArrivalString(), is(nullValue()));
   }
 
+  */
   /*
   private String FlightName; //= "Flight Default";
   private int flightNumber = 42;

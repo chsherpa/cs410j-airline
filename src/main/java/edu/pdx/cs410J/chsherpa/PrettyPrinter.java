@@ -10,11 +10,6 @@ import java.util.Date;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-//TODO DATEFORMAT RETURNED IN SHORT
-//TODO Flights should be sorted alphabetically by their code of their source.
-//TODO Flights that depart from same airport should be sorted chronologically by their departure time
-//TODO Flights that depart from the same airport at the same time are considered to be the same (“equal”).
-//TODO To facilitate sorting, your Flight class should implement the java.lang.Comparable interface
 /**
  * Created by chsherpa on 7/25/17.
  */

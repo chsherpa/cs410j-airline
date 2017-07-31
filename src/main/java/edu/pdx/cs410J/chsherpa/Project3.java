@@ -46,22 +46,6 @@ public class Project3 {
     System.out.printf("%-20s%s","-textFile file", "Where to read/write the airline info\n");
     System.out.printf("%-20s%s","-print", "Prints a description of the new flight\n");
     System.out.printf("%-20s%s","-README", "Prints a README for this project and exits\n");
-
-    /*
-    System.out.println( "name"+ "\t\t\t\t" + "The name of the airline");
-    System.out.println( "flightNumber"+ "\t\t" + "The flight number");
-    System.out.println( "src" +"\t\t\t\t\t" + "Three-letter code of departure airport");
-    System.out.println( "departTime"+ "\t\t\t" + "Departure date and time (24-hour time)");
-    System.out.println( "dest"+ "\t\t\t\t" + "Three-letter code of arrival airport");
-    System.out.println( "arriveTime"+ "\t\t\t" + "Arrival date and time (24-hour time)");
-    System.out.println( "|_Date and time should be in the format: mm/dd/yyyy hh:mm");
-    System.out.println( "\nflag options (options may appear in any order):");
-    System.out.println("-pretty file" +"\t\t" + "Pretty print the airline’s flights to\n" +
-            "\t\t\t\t\ta text file or standard out (file -)");
-    System.out.println( "-textFile file" +"\t\t" +"Where to read/write the airline info");
-    System.out.println( "-print"+ "\t\t\t\t" + "Prints a description of the new flight");
-    System.out.println( "-README"+ "\t\t\t\t" + "Prints a README for this project and exits");
-    */
   }
 
   /**
